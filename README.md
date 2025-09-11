@@ -1,714 +1,418 @@
 # 📊 DeepReport
-- [English](README.md) | [中文](README_CN.md)
-DeepReport is an open-source AI-powered financial research and report generation system built on the SmolAgents framework. It utilizes specialized agents (DeepResearcher, Browser, DeepAnalyze, FinalAnswer) to create comprehensive financial reports with rich visualizations, professional citations, and data溯源.
+- [English](README_EN.md) | [中文](README.md)
 
-## ✨ Features
+DeepReport是一个开源的AI驱动金融研究和报告生成系统，使用规划智能体和子智能体协作来创建具有丰富可视化、专业引用和数据溯源的综合金融报告。
 
-### 🤖 SmolAgents-Powered AI System
-- **SmolAgents Framework**: Advanced multi-agent AI orchestration with tool management
-- **Planning Agent**: Task decomposition and workflow orchestration using SmolAgents
-- **Specialized Sub-Agents**: Optimized agents for specific tasks:
-  - **DeepResearcher Agent**: High-quality data source filtering and discovery
-  - **Browser Agent**: Web navigation, PDF browsing, and interactive content extraction
-  - **DeepAnalyze Agent**: Financial analysis, valuation, and insights generation
-  - **FinalAnswer Agent**: HTML rendering, quality assessment, and report formatting
+## ✨ 功能特性
 
-### 🔍 Multi-Engine Search
-- **Serper**: Google search API integration
-- **Metaso**: Advanced search capabilities
-- **Sogou**: Chinese search engine support
-- **Result Aggregation**: Automatic deduplication and relevance ranking
+### 🤖 多智能体协作系统
+- **规划智能体 (Planning Agent)**：将复杂研究任务分解为可执行的子任务
+- **子智能体 (Sub-Agents)**：专门处理不同任务的智能体：
+  - **深度研究智能体 (DeepResearcher Agent)**：筛选高质量数据源
+  - **浏览器智能体 (Browser Agent)**：网页交互、PDF文件浏览等细粒度交互
+  - **深度分析智能体 (DeepAnalyze Agent)**：深度分析数据、挖掘财报、专业估值分析
+  - **最终报告智能体 (Final Answer Agent)**：HTML渲染、质量评估、格式转换
 
-### 🔗 MCP Protocol Support
-- **FastMCP Integration**: Local and remote MCP tool connections
-- **Tool Registry**: Dynamic tool registration and discovery
-- **Flexible Architecture**: Easy integration with external services
+### 🔍 多引擎搜索
+- **Serper**：Google搜索API集成
+- **Metaso**：高级搜索功能
+- **搜狗**：中文搜索引擎支持
+- **结果聚合**：自动去重和相关性排序
 
-### 📈 Rich Report Generation
-- **Interactive HTML Reports**: Professional, web-based reports with embedded charts
-- **Multiple Chart Types**: Line, bar, pie, radar, scatter, and financial charts
-- **Citation Management**: APA, MLA, Chicago, Harvard citation styles
-- **Data Visualization**: Chart.js integration for dynamic, interactive charts
+### 🔗 MCP协议支持
+- **FastMCP集成**：本地和远程MCP工具连接
+- **工具注册**：动态工具注册和发现
+- **灵活架构**：易于集成外部服务
 
-### 🌐 User Interface
-- **Gradio Frontend**: Easy-to-use web interface
-- **Real-time Status**: Live feedback on report generation progress
-- **Export Options**: HTML and JSON output formats
+### 📈 丰富报告生成
+- **交互式HTML报告**：具有嵌入图表的专业Web报告
+- **多种图表类型**：折线图、柱状图、饼图、雷达图、散点图、财务图表
+- **引用管理**：APA、MLA、芝加哥、哈佛引用格式
+- **数据可视化**：Chart.js集成，支持动态交互图表
 
-## 🚀 Quick Start
+### 🌐 用户界面
+- **Gradio前端**：易用的Web界面
+- **实时状态**：报告生成进度的实时反馈
+- **导出选项**：HTML和JSON输出格式
+## 🏗️ 系统架构
 
-### Prerequisites
-- Python 3.8+
-- Required API keys (see Configuration section)
-- Chrome/Chromium browser (for web automation)
+### 系统概览
 
-### Installation
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Gradio UI     │    │   Planning      │    │   Sub-Agents    │
+│   界面           │◄──►│   Agent         │◄──►│   (Browser,     │
+│                 │    │   规划智能体    │    │    Search,       │
+└─────────────────┘    └─────────────────┘    │    Analyze,       │
+                              ▲                │    Final)        │
+                              │                └─────────────────┘
+                              │                         ▲
+┌─────────────────┐    ┌─────────────────┐          │
+│   Search        │    │   MCP           │          │
+│   搜索引擎      │    │   Manager       │──────────┘
+│   (Serper,      │    │   管理器        │             
+│    Metaso,      │    └─────────────────┘             
+│    Sogou)       │             
+└─────────────────┘             
+         ▲                             
+         │                             
+┌─────────────────┐             
+│   Report        │             
+│   报告生成器    │             
+│   (HTML,        │             
+│    Charts,      │             
+│    Citations)   │             
+└─────────────────┘             
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/DeepReport.git
-   cd DeepReport
-   ```
+### 核心组件
 
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+#### 智能体 (Agents)
+- **BaseAgent**: 所有智能体的抽象基类
+- **PlanningAgent**: 任务分解和工作流编排
+- **BrowserAgent**: Web自动化和内容提取
+- **DeepSearchAgent**: 多引擎搜索协调
+- **DeepAnalyzeAgent**: 金融数据分析
+- **FinalAnswerAgent**: 报告生成和格式化
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+#### 搜索集成 (Search Integration)
+- **SearchManager**: 协调多个搜索引擎
+- **SerperEngine**: Google搜索API封装
+- **MetasoEngine**: Metaso搜索API封装
+- **SogouEngine**: 搜狗搜索API封装
 
-4. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your API keys and configuration
-   ```
+#### 报告生成 (Report Generation)
+- **HTMLReportGenerator**: 创建专业HTML报告
+- **ChartGenerator**: 使用Chart.js生成各种图表
+- **CitationManager**: 管理多种引用格式
 
-5. **Run the application**
-   ```bash
-   python main.py
-   ```
+#### MCP集成 (MCP Integration)
+- **MCPManager**: 处理MCP协议通信
+- **Tool Registry**: 动态工具注册和发现
+- **Connection Management**: 本地和远程服务器连接
 
-The application will start at `http://localhost:7860`
 
-## 🚀 Quick Start Commands
 
-### Using Docker (Recommended)
+## 🚀 快速启动命令
+
+### 使用Docker（推荐）
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/your-username/DeepReport.git
 cd DeepReport
 
-# Quick start with Docker
+# Docker快速启动
 ./start.sh
 
-# Or manually start with Docker Compose
+# 或使用Docker Compose手动启动
 docker-compose up -d
 ```
 
-### Manual Installation
+### 手动安装
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/your-username/DeepReport.git
 cd DeepReport
 
-# Create virtual environment
+# 创建虚拟环境
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install dependencies
+# 安装依赖
 pip install -r requirements.txt
 
-# Set up environment
+# 设置环境变量
 cp .env.example .env
-# Edit .env with your API keys
+# 编辑.env文件，添加您的API密钥和配置
 
-# Run the application
+# 运行应用
 python main.py
 ```
 
-## 🐳 Docker Deployment
+## ⚙️ 配置说明
 
-### 🚀 One-Command Quick Start
+### 环境变量
 
-The simplest way to start DeepReport:
-
-```bash
-# Clone and start
-git clone https://github.com/your-username/DeepReport.git
-cd DeepReport
-./start.sh
-```
-
-This will:
-- Check Docker is running
-- Create .env file if needed
-- Build and start all services
-- Provide access URL
-
-### Quick Start Scripts
-
-```bash
-# Start the application
-./start.sh
-
-# Stop the application
-./stop.sh
-
-# Full deployment with all options
-./docker-deploy.sh deploy
-
-# Check status
-./docker-deploy.sh status
-
-# View logs
-./docker-deploy.sh logs
-```
-
-### Standard Docker Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/DeepReport.git
-   cd DeepReport
-   ```
-
-2. **Create environment file**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your API keys and configuration
-   ```
-
-3. **Build and run with Docker Compose**
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **Access the application**
-   Open `http://localhost:7860` in your browser
-
-### Manual Docker Build
-
-1. **Build the Docker image**
-   ```bash
-   docker build -t deepreport:latest .
-   ```
-
-2. **Run the container**
-   ```bash
-   docker run -d \
-     --name deepreport-app \
-     -p 7860:7860 \
-     -v $(pwd)/reports:/app/reports \
-     -v $(pwd)/logs:/app/logs \
-     --env-file .env \
-     deepreport:latest
-   ```
-
-### Docker Configuration Options
-
-#### Environment Variables
-Create a `.env` file for Docker configuration:
+基于 `.env.example` 创建 `.env` 文件：
 
 ```env
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key_here
+# OpenAI配置
+OPENAI_API_KEY=您的openai_api_key
 OPENAI_BASE_URL=https://api.openai.com/v1
 
-# Anthropic Configuration
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
+# Anthropic配置
+ANTHROPIC_API_KEY=您的anthropic_api_key
 
-# Search Engine APIs
-SERPER_API_KEY=your_serper_api_key_here
-METASO_API_KEY=your_metaso_api_key_here
-SOGOU_API_KEY=your_sogou_api_key_here
+# 搜索引擎API
+SERPER_API_KEY=您的serper_api_key
+METASO_API_KEY=您的metaso_api_key
+SOGOU_API_KEY=您的sogou_api_key
 
-# Model Configuration
+# 模型配置
 DEFAULT_MODEL=gpt-4o
 MAX_TOKENS=4096
 TEMPERATURE=0.7
 
-# Report Configuration
+# 报告配置
 OUTPUT_DIR=./reports
 CHARTS_ENABLED=true
 DATA_SOURCES_ENABLED=true
 
-# MCP Configuration
-MCP_SERVER_URL=your_mcp_server_url
-MCP_API_KEY=your_mcp_api_key
+# MCP配置
+MCP_SERVER_URL=您的mcp服务器地址
+MCP_API_KEY=您的mcp_api_key
 
-# Browser Configuration
-HEADLESS_BROWSER=true
-BROWSER_TIMEOUT=30000
-
-# Gradio Configuration
-GRADIO_SERVER_NAME=0.0.0.0
-GRADIO_SERVER_PORT=7860
-GRADIO_SHARE=false
-GRADIO_DEBUG=false
-```
-
-#### Docker Compose Services
-- **deepreport**: Main application service
-- **redis**: Optional Redis caching (uncomment in docker-compose.yml)
-- **nginx**: Optional Nginx reverse proxy (uncomment in docker-compose.yml)
-
-### Docker Commands
-
-```bash
-# Start all services
-docker-compose up -d
-
-# Stop all services
-docker-compose down
-
-# View logs
-docker-compose logs -f deepreport
-
-# Rebuild and restart
-docker-compose build --no-cache
-docker-compose up -d
-
-# Access container shell
-docker exec -it deepreport-app bash
-
-# Check container status
-docker-compose ps
-
-# Start specific service only
-docker-compose up deepreport
-
-# Stop specific service
-docker-compose stop deepreport
-
-# Restart service
-docker-compose restart deepreport
-
-# Remove containers and volumes (cleanup)
-docker-compose down -v
-```
-
-### Quick Docker Commands
-
-#### Using the deployment script
-```bash
-# Full deployment (recommended)
-./docker-deploy.sh deploy
-
-# Quick start
-./docker-deploy.sh start
-
-# View logs
-./docker-deploy.sh logs
-
-# Check status
-./docker-deploy.sh status
-
-# Stop services
-./docker-deploy.sh stop
-```
-
-#### Manual Docker commands
-```bash
-# Build image manually
-docker build -t deepreport:latest .
-
-# Run container manually
-docker run -d \
-  --name deepreport-app \
-  -p 7860:7860 \
-  -v $(pwd)/reports:/app/reports \
-  -v $(pwd)/logs:/app/logs \
-  --env-file .env \
-  deepreport:latest
-
-# Run with resource limits
-docker run -d \
-  --name deepreport-app \
-  -p 7860:7860 \
-  --memory=4g \
-  --cpus=2 \
-  -v $(pwd)/reports:/app/reports \
-  --env-file .env \
-  deepreport:latest
-
-# Run with custom environment variables
-docker run -d \
-  --name deepreport-app \
-  -p 7860:7860 \
-  -e OPENAI_API_KEY=your_key \
-  -e SERPER_API_KEY=your_key \
-  -e DEFAULT_MODEL=gpt-4o \
-  deepreport:latest
-```
-
-### Production Deployment
-
-#### With Nginx Reverse Proxy
-1. Uncomment the nginx service in `docker-compose.yml`
-2. Create `nginx.conf` file
-3. Add SSL certificates to `./ssl/` directory
-4. Start the stack:
-
-```bash
-docker-compose up -d
-```
-
-#### Security Considerations
-- Use strong API keys and rotate them regularly
-- Enable HTTPS in production
-- Use Docker secrets for sensitive data
-- Limit container permissions
-- Monitor container logs
-- Regularly update base images
-
-#### Resource Management
-```bash
-# Limit container resources
-docker run -d \
-  --name deepreport-app \
-  --memory=4g \
-  --cpus=2 \
-  -p 7860:7860 \
-  deepreport:latest
-```
-
-#### Health Checks
-The Docker image includes built-in health checks:
-- Checks application availability every 30 seconds
-- Restarts container if unhealthy
-- Provides status monitoring
-
-### Troubleshooting
-
-#### Common Issues
-1. **Chrome installation errors**: Ensure all system dependencies are installed
-2. **Permission issues**: Check volume mount permissions
-3. **API key errors**: Verify environment variables in `.env`
-4. **Port conflicts**: Ensure port 7860 is available
-
-#### Debug Commands
-```bash
-# Check container logs
-docker logs deepreport-app
-
-# Check container health
-docker inspect deepreport-app --format='{{.State.Health.Status}}'
-
-# Access container for debugging
-docker exec -it deepreport-app bash
-
-# Test application inside container
-docker exec deepreport-app curl http://localhost:7860/
-```
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-Create a `.env` file based on `.env.example`:
-
-```env
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_BASE_URL=https://api.openai.com/v1
-
-# Anthropic Configuration
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-
-# Search Engine APIs
-SERPER_API_KEY=your_serper_api_key_here
-METASO_API_KEY=your_metaso_api_key_here
-SOGOU_API_KEY=your_sogou_api_key_here
-
-# Model Configuration
-DEFAULT_MODEL=gpt-4o
-MAX_TOKENS=4096
-TEMPERATURE=0.7
-
-# Report Configuration
-OUTPUT_DIR=./reports
-CHARTS_ENABLED=true
-DATA_SOURCES_ENABLED=true
-
-# MCP Configuration
-MCP_SERVER_URL=your_mcp_server_url
-MCP_API_KEY=your_mcp_api_key
-
-# Browser Configuration
+# 浏览器配置
 HEADLESS_BROWSER=true
 BROWSER_TIMEOUT=30000
 ```
 
-### API Key Setup
+### API密钥设置
 
 #### OpenAI
-1. Go to [OpenAI Platform](https://platform.openai.com/)
-2. Create an API key
-3. Add it to your `.env` file
+1. 访问 [OpenAI Platform](https://platform.openai.com/)
+2. 创建API密钥
+3. 添加到您的 `.env` 文件
 
-#### Serper (Google Search)
-1. Go to [Serper.dev](https://serper.dev/)
-2. Sign up and get an API key
-3. Add it to your `.env` file
+#### Serper (Google搜索)
+1. 访问 [Serper.dev](https://serper.dev/)
+2. 注册并获取API密钥
+3. 添加到您的 `.env` 文件
 
 #### Anthropic
-1. Go to [Anthropic Console](https://console.anthropic.com/)
-2. Create an API key
-3. Add it to your `.env` file
+1. 访问 [Anthropic Console](https://console.anthropic.com/)
+2. 创建API密钥
+3. 添加到您的 `.env` 文件
 
 #### Metaso
-1. Contact Metaso for API access
-2. Add the API key to your `.env` file
+1. 联系Metaso获取API访问权限
+2. 将API密钥添加到您的 `.env` 文件
 
-#### Sogou
-1. Apply for Sogou API access
-2. Add the API key to your `.env` file
+#### 搜狗
+1. 申请搜狗API访问权限
+2. 将API密钥添加到您的 `.env` 文件
 
-## 📚 Usage Guide
+## 📚 使用指南
 
-### Basic Usage
+### 基础使用
 
-1. **Launch the application**
-   ```bash
-   python main.py
-   ```
+1. **启动应用**
+启动命令：
 
-2. **Open the web interface**
-   Navigate to `http://localhost:7860`
+* 最简单的方式
+  ./start.sh
 
-3. **Generate a report**
-   - Enter your research topic
-   - Specify requirements (one per line)
-   - Choose output format (HTML recommended)
-   - Select AI model
-   - Click "Generate Report"
+### 使用docker-compose
+  ```docker-compose up -d```
 
-### Example Research Topics
+2. **打开Web界面**
+   导航到 `http://localhost:7860`
+
+3. **生成报告**
+   - 输入您的研究主题
+   - 指定要求（每行一个）
+   - 选择输出格式（推荐HTML）
+   - 选择AI模型
+   - 点击"生成报告"
+
+### 示例研究主题
 
 ```
-Tesla Inc. (TSLA) Q4 2023 Financial Performance Analysis
-Cryptocurrency Market Trends and Investment Opportunities
-Renewable Energy Sector Growth Prospects 2024
-Federal Reserve Monetary Policy Impact on Tech Stocks
-Artificial Intelligence in Financial Services Market Analysis
+特斯拉(TSLA) 2023年第四季度财务业绩分析
+加密货币市场趋势和投资机会
+可再生能源行业2024年前景展望
+美联储货币政策对科技股的影响
+金融服务中人工智能市场分析
 ```
 
-### Advanced Usage
+### 高级使用
 
-#### Custom MCP Tools
+#### 自定义MCP工具
 
-You can register custom tools with the MCP manager:
+您可以向MCP管理器注册自定义工具：
 
 ```python
 from src.utils.mcp_manager import MCPManager
 
 async def custom_analysis_tool(data: str) -> Dict[str, Any]:
-    # Your custom analysis logic
-    return {"result": f"Analyzed: {data}"}
+    # 您的自定义分析逻辑
+    return {"result": f"已分析: {data}"}
 
-# Register the tool
+# 注册工具
 await mcp_manager.register_local_tool(
     tool_name="custom_analysis",
     tool_func=custom_analysis_tool,
-    description="Perform custom data analysis",
-    parameters={"data": {"type": "string", "description": "Data to analyze"}}
+    description="执行自定义数据分析",
+    parameters={"data": {"type": "string", "description": "要分析的数据"}}
 )
 ```
 
-#### Custom Chart Types
+#### 自定义图表类型
 
-Extend the chart generator for specialized financial charts:
+扩展图表生成器以支持专门的财务图表：
 
 ```python
 from src.report.chart_generator import ChartGenerator
 
 class CustomChartGenerator(ChartGenerator):
     async def generate_custom_chart(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        # Custom chart generation logic
+        # 自定义图表生成逻辑
         return chart_config
 ```
 
-## 🏗️ Architecture
 
-### System Overview
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Gradio UI     │    │   Planning      │    │   SmolAgents    │
-│   Interface     │◄──►│   Agent         │◄──►│   Framework     │
-│                 │    │                 │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                              ▲                         ▲
-                              │                         │
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Search        │    │   MCP           │    │   Specialized   │
-│   Engines       │    │   Manager       │◄───┤   Agents        │
-│   (Serper,      │    │                 │    │   (DeepResearcher│
-│    Metaso,      │    └─────────────────┘    │    Browser,      │
-│    Sogou)       │                           │    DeepAnalyze,   │
-└─────────────────┘                           │    FinalAnswer)   │
-         ▲                                    └─────────────────┘
-         │                                              ▲
-┌─────────────────┐                                │
-│   Report        │                                │
-│   Generator     │────────────────────────────────┘
-│   (HTML,        │
-│    Charts,      │
-│    Citations)   │
-└─────────────────┘
-```
+## 🔧 开发指南
 
-### Key Components
-
-#### SmolAgents-Based Architecture
-- **BaseAgent**: Abstract base class inheriting from SmolAgents Agent
-- **PlanningAgent**: Task decomposition using SmolAgents with custom PlanningTool
-- **DeepResearcherAgent**: Source filtering with SourceDiscoveryTool, ContentExtractionTool, QualityAssessmentTool
-- **BrowserAgent**: Web automation with WebNavigationTool, PDFAnalysisTool, FormInteractionTool
-- **DeepAnalyzeAgent**: Financial analysis with FinancialMetricsTool, SentimentAnalysisTool, ValuationTool
-- **FinalAnswerAgent**: Report generation with HTMLReportTool, QualityAssessmentTool, DataVisualizationTool
-
-#### Key SmolAgents Features
-- **Tool Management**: Dynamic tool registration and execution
-- **Memory Management**: ConversationMemory for context preservation
-- **Model Integration**: Support for OpenAI, Anthropic, and other models
-- **Async Execution**: Non-blocking agent coordination
-- **Error Handling**: Robust error recovery and logging
-
-#### Search Integration
-- **SearchManager**: Coordinates multiple search engines
-- **SerperEngine**: Google search API wrapper
-- **MetasoEngine**: Metaso search API wrapper
-- **SogouEngine**: Sogou search API wrapper
-
-#### Report Generation
-- **HTMLReportGenerator**: Creates professional HTML reports
-- **ChartGenerator**: Generates various chart types using Chart.js
-- **CitationManager**: Manages citations in multiple styles
-
-#### MCP Integration
-- **MCPManager**: Handles MCP protocol communications
-- **Tool Registry**: Dynamic tool registration and discovery
-- **Connection Management**: Local and remote server connections
-
-## 🔧 Development
-
-### Project Structure
+### 项目结构
 
 ```
 DeepReport/
 ├── src/
-│   ├── agents/                 # AI agents
-│   │   ├── base_agent.py      # Base agent class
-│   │   ├── planning_agent.py  # Planning agent
-│   │   └── sub_agents.py      # Specialized sub-agents
-│   ├── search/                # Search engine integration
-│   │   ├── search_manager.py  # Search coordination
-│   │   └── engines.py         # Search engine implementations
-│   ├── report/                # Report generation
-│   │   ├── html_generator.py  # HTML report generator
-│   │   ├── chart_generator.py # Chart generation
-│   │   └── citation_manager.py # Citation management
-│   └── utils/                 # Utilities
-│       ├── model_adapter.py   # AI model adapter
-│       └── mcp_manager.py     # MCP protocol manager
-├── templates/                 # HTML templates
-├── static/                    # Static assets
-├── tests/                     # Test files
-├── docs/                      # Documentation
-├── main.py                    # Main application
-├── config.py                  # Configuration management
-├── requirements.txt           # Dependencies
-└── README.md                  # This file
+│   ├── agents/                 # AI智能体
+│   │   ├── base_agent.py      # 基础智能体类
+│   │   ├── planning_agent.py  # 规划智能体
+│   │   └── sub_agents.py      # 专门子智能体
+│   ├── search/                # 搜索引擎集成
+│   │   ├── search_manager.py  # 搜索协调
+│   │   └── engines.py         # 搜索引擎实现
+│   ├── report/                # 报告生成
+│   │   ├── html_generator.py  # HTML报告生成器
+│   │   ├── chart_generator.py # 图表生成
+│   │   └── citation_manager.py # 引用管理
+│   └── utils/                 # 工具类
+│       ├── model_adapter.py   # AI模型适配器
+│       └── mcp_manager.py     # MCP协议管理器
+├── templates/                 # HTML模板
+├── static/                    # 静态资源
+├── tests/                     # 测试文件
+├── docs/                      # 文档
+├── main.py                    # 主应用
+├── config.py                  # 配置管理
+├── requirements.txt           # 依赖
+└── README.md                  # 英文说明
 ```
 
-### Running Tests
+### 运行测试
 
 ```bash
-# Run all tests
+# 运行所有测试
 python -m pytest tests/
 
-# Run specific test file
+# 运行特定测试文件
 python -m pytest tests/test_agents.py
 
-# Run with coverage
+# 带覆盖率运行
 python -m pytest --cov=src tests/
 ```
 
-### Code Quality
 
-```bash
-# Format code
-black src/
+## 🤝 参与贡献
 
-# Lint code
-flake8 src/
+我们欢迎贡献！请参阅我们的[贡献指南](CONTRIBUTING_CN.md)了解详情。
 
-# Type checking
-mypy src/
-```
+### 如何贡献
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### How to Contribute
-
-1. **Fork the repository**
-2. **Create a feature branch**
+1. **Fork仓库**
+2. **创建功能分支**
    ```bash
    git checkout -b feature/amazing-feature
    ```
-3. **Make your changes**
-4. **Add tests**
-5. **Ensure all tests pass**
-6. **Commit your changes**
+3. **进行更改**
+4. **添加测试**
+5. **确保所有测试通过**
+6. **提交更改**
    ```bash
-   git commit -m 'Add amazing feature'
+   git commit -m '添加惊人功能'
    ```
-7. **Push to the branch**
+7. **推送到分支**
    ```bash
    git push origin feature/amazing-feature
    ```
-8. **Open a Pull Request**
+8. **打开Pull Request**
+
+## 🐳 Docker部署
+
+### 🚀 一键快速启动
+
+最简单的启动DeepReport的方式：
+
+```bash
+# 克隆并启动
+git clone https://github.com/your-username/DeepReport.git
+cd DeepReport
+./start.sh
+```
+
+这将：
+- 检查Docker是否运行
+- 创建.env文件（如果需要）
+- 构建并启动所有服务
+- 提供访问URL
+
+### 快速启动脚本
+
+```bash
+# 启动应用
+./start.sh
+
+# 停止应用
+./stop.sh
+
+# 完整部署（包含所有选项）
+./docker-deploy.sh deploy
+
+# 检查状态
+./docker-deploy.sh status
+
+# 查看日志
+./docker-deploy.sh logs
+```
 
 
-## 📋 Roadmap
+## 📋 路线图
 
-### Version 1.0 (Current)
-- ✅ SmolAgents framework integration
-- ✅ Specialized agents: DeepResearcher, Browser, DeepAnalyze, FinalAnswer
-- ✅ Multi-engine search coordination
-- ✅ HTML report generation with rich visualizations
-- ✅ Gradio web interface
-- ✅ MCP protocol support with FastMCP
-- ✅ Comprehensive tool systems for each agent
-- ✅ Professional citation management
+### 版本1.0 (当前)
+- ✅ 基于SmolAgents框架
+- ✅ 专门化智能体：DeepResearcher、Browser、DeepAnalyze、FinalAnswer
+- ✅ 多引擎搜索协调
+- ✅ 带有丰富可视化的HTML报告生成
+- ✅ Gradio Web界面
+- ✅ 基于FastMCP的MCP协议支持
+- ✅ 每个智能体的完整工具系统
+- ✅ 专业引用管理
 
-### Version 1.1 (Planned)
-- 🔄 Enhanced financial chart types and real-time updates
-- 🔄 Real-time market data integration
-- 🔄 Advanced PDF export and report formatting
-- 🔄 Machine learning-based predictive analytics
-- 🔄 Multi-agent collaboration optimization
+### 版本1.1 (计划中)
+- 🔄 增强多模态能力
+- 🔄 更好的上下文管理
+- 🔄 私有数据接入功能
 
+## 📄 许可证
 
+本项目采用MIT许可证 - 详情请参阅[LICENSE](LICENSE)文件。
 
-## 📄 License
+## 参考
+[browser-use](https://github.com/browser-use/browser-use)
+[smolagents](https://github.com/huggingface/smolagents)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 📞 支持
 
-## 🙏 Acknowledgments
+- **文档**: [docs/](docs/)
+- **问题**: [GitHub Issues](https://github.com/your-username/DeepReport/issues)
+- **讨论**: [GitHub Discussions](https://github.com/your-username/DeepReport/discussions)
+- **邮件**: support@deepreport.ai
 
-- **SmolAgents** for the advanced multi-agent AI framework
-- OpenAI for GPT models
-- Anthropic for Claude models
-- Gradio for the web interface framework
-- Chart.js for data visualization
-- FastMCP for protocol implementation
-- Browser-use for web automation
-- All contributors and community members
+## 🌟 Star历史
 
-## 📞 Support
-
-- **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/your-username/DeepReport/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/DeepReport/discussions)
-- **Email**: wisdompan1@outlook.com
-
-## 🌟 Star History
-
-If you find this project useful, please consider giving it a star on GitHub!
+如果您觉得这个项目有用，请考虑在GitHub上给它一个star！
 
 ---
 
-**DeepReport** - Empowering financial research with AI agents and comprehensive analysis tools.
+**DeepReport** - 用AI智能体和综合分析工具赋能金融研究。
 
 ---
 
-- [English](README.md) | [中文](README_CN.md)
-- [Contribution Guidelines(English)](CONTRIBUTING.md) | [贡献指南(中文)](CONTRIBUTING_CN.md)
+
+
+
+- [贡献指南(English)](CONTRIBUTING.md) | [贡献指南(中文)](CONTRIBUTING_CN.md)
