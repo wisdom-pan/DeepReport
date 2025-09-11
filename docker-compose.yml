@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  deepreport:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: deepreport-app
+    ports:
+      - "7860:7860"
+    environment:
+      # OpenAI Configuration
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      
+      # Anthropic Configuration
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Search Engine APIs
+      - SERPER_API_KEY=${SERPER_API_KEY}
+      - METASO_API_KEY=${METASO_API_KEY}
+      - SOGOU_API_KEY=${SOGOU_API_KEY}
+      
+      # Model Configuration
+      - DEFAULT_MODEL=${DEFAULT_MODEL:-gpt-4o}
+      - MAX_TOKENS=${MAX_TOKENS:-4096}
+      - TEMPERATURE=${TEMPERATURE:-0.7}
+      
+      # Report Configuration
+      - OUTPUT_DIR=./reports
+      - CHARTS_ENABLED=${CHARTS_ENABLED:-true}
+      - DATA_SOURCES_ENABLED=${DATA_SOURCES_ENABLED:-true}
+      
+      # MCP Configuration
+      - MCP_SERVER_URL=${MCP_SERVER_URL}
+      - MCP_API_KEY=${MCP_API_KEY}
+      
+      # Browser Configuration
+      - HEADLESS_BROWSER=${HEADLESS_BROWSER:-true}
+      - BROWSER_TIMEOUT=${BROWSER_TIMEOUT:-30000}
+      
+      # Gradio Configuration
+      - GRADIO_SERVER_NAME=${GRADIO_SERVER_NAME:-0.0.0.0}
+      - GRADIO_SERVER_PORT=${GRADIO_SERVER_PORT:-7860}
+      - GRADIO_SHARE=${GRADIO_SHARE:-false}
+      - GRADIO_DEBUG=${GRADIO_DEBUG:-false}
+    
+    volumes:
+      - ./reports:/app/reports
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - deepreport-network
+
+  # Optional: Redis for caching (uncomment if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: deepreport-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - deepreport-network
+
+  # Optional: Nginx reverse proxy (uncomment for production)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: deepreport-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf
+  #     - ./ssl:/etc/nginx/ssl
+  #   depends_on:
+  #     - deepreport
+  #   restart: unless-stopped
+  #   networks:
+  #     - deepreport-network
+
+networks:
+  deepreport-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
