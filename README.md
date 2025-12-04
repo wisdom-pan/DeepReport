@@ -57,6 +57,9 @@ DeepReport/
 - **Docker Support**: Complete containerization with one-click deployment
 - **MCP Protocol**: FastMCP support for local/remote tool connections
 
+## DEMO
+[demo](https://modelscope.cn/studios/wisdom11111/DeepResearchReport)
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [contributing guide](docs/en/CONTRIBUTING.md) for details.
